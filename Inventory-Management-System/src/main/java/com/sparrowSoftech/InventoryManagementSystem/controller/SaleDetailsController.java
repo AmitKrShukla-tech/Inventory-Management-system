@@ -59,4 +59,6 @@ public class SaleDetailsController {
         SaleDetailsDto updatedRecord = saleDetailsService.updateSaleDetailsRecordById(id, saleDetailsDto);
         return new ResponseEntity<>(updatedRecord, HttpStatus.CREATED);
     }
+
+
 }

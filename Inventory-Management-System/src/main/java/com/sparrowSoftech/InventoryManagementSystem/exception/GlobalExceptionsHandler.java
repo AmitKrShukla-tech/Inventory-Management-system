@@ -15,5 +15,10 @@ public class GlobalExceptionsHandler {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ex.getMessage());
     }
 
+    @ExceptionHandler(QuantityNotFoundException.class)
+    public  ResponseEntity<String> handleQuantityException(Exception ex){
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ex.getMessage());
+    }
+
 
 }

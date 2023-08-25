@@ -3,10 +3,12 @@ package com.sparrowSoftech.InventoryManagementSystem.controller;
 import com.sparrowSoftech.InventoryManagementSystem.payload.PurchaseDetailsDto;
 import com.sparrowSoftech.InventoryManagementSystem.service.PurchaseDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 @RestController
 @RequestMapping("api/purchasedetails")
@@ -62,6 +64,14 @@ public class PurchaseDetailsController {
                 (purchaseDetailsDto, id);
         return new ResponseEntity<>(updatePurchaseRecord,HttpStatus.CREATED);
     }
+
+//    @GetMapping("/quantity")
+//    public ResponseEntity<PurchaseDetailsDto> getQuantityDateWise(@RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
+//                                                                  @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate){
+//
+//        PurchaseDetailsDto quantityDateWise = purchaseDetailsService.getQuantityDateWise(startDate, endDate);
+//        return new ResponseEntity<>(quantityDateWise,HttpStatus.CREATED);
+//    }
 
     //api=== http://localhost:8080/api/purchasedetails/purchase_id/item_id/quantity
 //    @PutMapping("/{purchase_id}/{item_id}/quantity")

@@ -2,6 +2,7 @@ package com.sparrowSoftech.InventoryManagementSystem.service;
 
 import com.sparrowSoftech.InventoryManagementSystem.payload.PurchaseDetailsDto;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public interface PurchaseDetailsService {
@@ -16,5 +17,9 @@ public interface PurchaseDetailsService {
 
     PurchaseDetailsDto updatePurchaseDetailRecordById(PurchaseDetailsDto purchaseDetailsDto,long id);
 
-    void reduceQuantity(long purchaseId, long itemId, PurchaseDetailsDto purchaseDetailsDto);
+//    void reduceQuantity(long purchaseId, long itemId, PurchaseDetailsDto purchaseDetailsDto);
+//
+//    PurchaseDetailsDto getQuantityDateWise(LocalDate startDate, LocalDate endDate);
+
+//    PurchaseDetailsDto getQuantityDateWise(LocalDate startDate, LocalDate endDate);
 }

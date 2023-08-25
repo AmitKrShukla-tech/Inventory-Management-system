@@ -13,7 +13,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity
+@Entity(name = "supplier_mstr")
 @Table(name = "supplier_mstr")
 public class Supplier {
 

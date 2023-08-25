@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.Value;
 import org.hibernate.annotations.CurrentTimestamp;
 
 import java.math.BigDecimal;
@@ -11,7 +12,7 @@ import java.time.LocalDateTime;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity
+@Entity(name = "sale_details")
 @Table(name = "sale_details")
 public class SaleDetails {
 
@@ -37,4 +38,5 @@ public class SaleDetails {
     @ManyToOne
     @JoinColumn(name = "item_id")
     private Item item;
+
 }

@@ -1,12 +1,15 @@
 package com.sparrowSoftech.InventoryManagementSystem.serviceImpl;
 
 import com.sparrowSoftech.InventoryManagementSystem.entities.Item;
+import com.sparrowSoftech.InventoryManagementSystem.entities.PurchaseDetails;
 import com.sparrowSoftech.InventoryManagementSystem.entities.Sale;
 import com.sparrowSoftech.InventoryManagementSystem.entities.SaleDetails;
+import com.sparrowSoftech.InventoryManagementSystem.exception.QuantityNotFoundException;
 import com.sparrowSoftech.InventoryManagementSystem.exception.ResourceNotFoundExceptions;
 import com.sparrowSoftech.InventoryManagementSystem.mapper.SaleDetailsMapper;
 import com.sparrowSoftech.InventoryManagementSystem.payload.SaleDetailsDto;
 import com.sparrowSoftech.InventoryManagementSystem.repository.ItemRepository;
+import com.sparrowSoftech.InventoryManagementSystem.repository.PurchaseDetailsRepository;
 import com.sparrowSoftech.InventoryManagementSystem.repository.SaleDetailsRepository;
 import com.sparrowSoftech.InventoryManagementSystem.repository.SaleRepository;
 import com.sparrowSoftech.InventoryManagementSystem.service.SaleDetailsService;
@@ -14,36 +17,69 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
-public class SaleDetailsServiceImpl extends SaleDetailsMapper implements SaleDetailsService  {
+public class SaleDetailsServiceImpl extends SaleDetailsMapper implements SaleDetailsService {
 
     @Autowired
     private SaleDetailsRepository saleDetailsRepo;
 
     @Autowired
     private ItemRepository itemRepo;
-
     @Autowired
     private SaleRepository saleRepo;
+    @Autowired
+    private PurchaseDetailsRepository purchaseDetailsRepo;
 
     @Override
     public SaleDetailsDto addNewSaleDetail(long sale_id, long item_id, SaleDetailsDto saleDetailsDto) {
         SaleDetails saleDetailsEntity = maptoSaleDetailsEntity(saleDetailsDto);
         Item item = itemRepo.findById(item_id).orElseThrow(() -> new
                 ResourceNotFoundExceptions("Item", "id", item_id));
-        saleDetailsEntity.setPrice(item.getPrice());
-        saleDetailsEntity.setItem(item);
         Sale sale = saleRepo.findById(sale_id).orElseThrow(() -> new
                 ResourceNotFoundExceptions("sale", "id", sale_id));
-        saleDetailsEntity.setSale(sale);
-        saleDetailsEntity.setAmount(BigDecimal.valueOf(saleDetailsEntity.getPrice() * saleDetailsEntity.getQuantity() + saleDetailsEntity.getQuantity()*1000));
-        SaleDetails saleDetails = saleDetailsRepo.save(saleDetailsEntity);
-        SaleDetailsDto newSaleDetails = mapToSaleDetailsDto(saleDetails);
-        return newSaleDetails;
+        String customerName = sale.getCustomerName();
+        PurchaseDetails purchaseDetails = purchaseDetailsRepo.findById(item_id).orElseThrow(() -> new
+                ResourceNotFoundExceptions("itemId", "id", item_id));
+
+        double itemQuantity = purchaseDetails.getQuantity();
+        double saleQuantity = saleDetailsEntity.getQuantity();
+
+        if (saleQuantity<itemQuantity){
+
+            saleDetailsEntity.setPrice(item.getPrice());
+            saleDetailsEntity.setItem(item);
+            saleDetailsEntity.setSale(sale);
+            saleDetailsEntity.setAmount(BigDecimal.valueOf(saleDetailsEntity.getPrice() * saleDetailsEntity.getQuantity() + saleDetailsEntity.getQuantity() * 1000));
+            saleDetailsEntity.setDateTime(LocalDateTime.now());
+            Optional<SaleDetails> byId = saleDetailsRepo.findById(sale_id);
+            saleDetailsEntity.setPrice(saleDetailsEntity.getPrice());
+            SaleDetails saleDetails = saleDetailsRepo.save(saleDetailsEntity);
+            SaleDetailsDto newSaleDetails = mapToSaleDetailsDto(saleDetails);
+            return newSaleDetails;
+        }
+        else{
+            throw new QuantityNotFoundException("Not sufficient Quantity Please Try After Sometime" +
+                    "  Thanks For Shoping With Us              !!");
+        }
     }
+//            double itemQuantity = itemDetailsByItemId.getQuantity();
+//            double saleQuantity = saleDetailsEntity.getQuantity();
+//            saleDetailsEntity.setPrice(itemDetailsByItemId.getPrice());
+//            saleDetailsEntity.setDateTime(itemDetailsByItemId.getDateTime());
+//            System.out.println(byItemId.getId());
+//            double stockQuantity = byItemId.getQuantity();
+//            double saleQuantity = saleDetailsEntity.getQuantity();
+//            if (saleQuantity >= stockQuantity) {
+//            saleDetailsEntity.getDateTime();
+//            saleDetailsEntity.setItem(item);
+//            saleDetailsEntity.setSale(sale);
+
 
 
     @Override
